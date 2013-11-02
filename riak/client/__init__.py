@@ -42,7 +42,7 @@ from riak.util import lazy_property
 def default_encoder(obj):
     """
     Default encoder for JSON datatypes, which returns UTF-8 encoded
-    json instead of the default bloated \uXXXX escaped ASCII strings.
+    json instead of the default bloated \\uXXXX escaped ASCII strings.
     """
     return json.dumps(obj, ensure_ascii=False).encode("utf-8")
 
