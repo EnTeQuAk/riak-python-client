@@ -47,6 +47,13 @@ def default_encoder(obj):
     return json.dumps(obj, ensure_ascii=False).encode("utf-8")
 
 
+def default_decoder(strng):
+    """
+    Default decoder for JSON datatypes, which come as UTF-8 encoded json.
+    """
+    return json.loads(strng.decode("utf-8"))
+
+
 @deprecateQuorumAccessors
 class RiakClient(RiakMapReduceChain, RiakClientOperations):
     """
@@ -104,8 +111,8 @@ class RiakClient(RiakMapReduceChain, RiakClientOperations):
         self._encoders = {'application/json': default_encoder,
                           'text/json': default_encoder,
                           'text/plain': str}
-        self._decoders = {'application/json': json.loads,
-                          'text/json': json.loads,
+        self._decoders = {'application/json': default_decoder,
+                          'text/json': default_decoder,
                           'text/plain': str}
         self._buckets = WeakValueDictionary()
 
