@@ -28,7 +28,7 @@ import csv
 import urllib.request, urllib.parse, urllib.error
 from cgi import parse_header
 from email import message_from_string
-from rfc822 import parsedate_tz, mktime_tz
+from email.utils import parsedate_tz, mktime_tz
 from xml.etree import ElementTree
 from riak import RiakError
 from riak.content import RiakContent
