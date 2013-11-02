@@ -96,6 +96,8 @@ class ErlangMapReduceTests(object):
         except RiakError as e:
             if e.value.startswith('May have tried'):
                 strfun_allowed = False
+            else:
+                raise e
         if strfun_allowed:
             self.assertEqual(result, ['2', '3', '4'])
 
