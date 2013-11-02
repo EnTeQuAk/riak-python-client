@@ -47,7 +47,7 @@ class RiakTransport(FeatureDetection):
         Returns a random client identifier
         """
         return ('py_%s' %
-                base64.b64encode(str(random.randint(1, 0x40000000))))
+                base64.b64encode(str(random.randint(1, 0x40000000)).encode('utf-8')))
 
     @classmethod
     def make_fixed_client_id(self):
