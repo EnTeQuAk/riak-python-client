@@ -140,18 +140,18 @@ class lazy_property(object):
 
     def __init__(self, fget):
         self.fget = fget
-        self.func_name = fget.__name__
+        self.__name__ = fget.__name__
 
     def __get__(self, obj, cls):
         if obj is None:
             return None
         value = self.fget(obj)
-        setattr(obj, self.func_name, value)
+        setattr(obj, self.__name__, value)
         return value
 
 
 def decode_index_value(index, value):
     if "_int" in index:
-        return long(value)
+        return int(value)
     else:
         return str(value)

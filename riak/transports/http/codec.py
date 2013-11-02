@@ -25,7 +25,7 @@ MAX_LINK_HEADER_SIZE = 8192 - 8
 
 import re
 import csv
-import urllib
+import urllib.request, urllib.parse, urllib.error
 from cgi import parse_header
 from email import message_from_string
 from rfc822 import parsedate_tz, mktime_tz
@@ -83,7 +83,7 @@ class RiakHttpCodec(object):
                 parts = [message_from_string(p)
                          for p in re.split(boundary, data)[1:-1]]
                 robj.siblings = [self._parse_sibling(RiakContent(robj),
-                                                     part.items(),
+                                                     list(part.items()),
                                                      part.get_payload())
                                  for part in parts]
 
@@ -97,7 +97,7 @@ class RiakHttpCodec(object):
                                 format(ctype))
 
         robj.siblings = [self._parse_sibling(RiakContent(robj),
-                                             headers.items(), data)]
+                                             list(headers.items()), data)]
 
         return robj
 
@@ -159,9 +159,9 @@ class RiakHttpCodec(object):
             matches = (re.match(oldform, linkHeader) or
                        re.match(newform, linkHeader))
             if matches is not None:
-                link = (urllib.unquote_plus(matches.group(2)),
-                        urllib.unquote_plus(matches.group(3)),
-                        urllib.unquote_plus(matches.group(4)))
+                link = (urllib.parse.unquote_plus(matches.group(2)),
+                        urllib.parse.unquote_plus(matches.group(3)),
+                        urllib.parse.unquote_plus(matches.group(4)))
                 links.append(link)
         return links
 
@@ -203,7 +203,7 @@ class RiakHttpCodec(object):
         # Create the header from metadata
         self._add_links_for_riak_object(robj, headers)
 
-        for key, value in robj.usermeta.iteritems():
+        for key, value in robj.usermeta.items():
             headers['X-Riak-Meta-%s' % key] = value
 
         for field, value in robj.indexes:
@@ -224,14 +224,14 @@ class RiakHttpCodec(object):
         same return value
         """
         result = {}
-        if u'response' in json:
-            result['num_found'] = json[u'response'][u'numFound']
-            result['max_score'] = float(json[u'response'][u'maxScore'])
+        if 'response' in json:
+            result['num_found'] = json['response']['numFound']
+            result['max_score'] = float(json['response']['maxScore'])
             docs = []
-            for doc in json[u'response'][u'docs']:
-                resdoc = {u'id': doc[u'id']}
-                if u'fields' in doc:
-                    for k, v in doc[u'fields'].iteritems():
+            for doc in json['response']['docs']:
+                resdoc = {'id': doc['id']}
+                if 'fields' in doc:
+                    for k, v in doc['fields'].items():
                         resdoc[k] = v
                 docs.append(resdoc)
             result['docs'] = docs

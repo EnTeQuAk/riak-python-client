@@ -18,10 +18,11 @@ under the License.
 
 from contextlib import contextmanager
 import threading
+import collections
 
 
 # This file is a rough port of the Innertube Ruby library
-class BadResource(StandardError):
+class BadResource(Exception):
     """
     Users of a :class:`Pool` should raise this error when the pool
     element currently in-use is bad and should be removed from the
@@ -109,7 +110,7 @@ class Pool(object):
         if not _filter:
             def _filter(obj):
                 return True
-        elif not callable(_filter):
+        elif not isinstance(_filter, collections.Callable):
             raise TypeError("_filter is not a callable")
 
         element = None
@@ -206,7 +207,7 @@ class PoolIterator(object):
     def __iter__(self):
         return self
 
-    def next(self):
+    def __next__(self):
         if len(self.targets) == 0:
             raise StopIteration
         if len(self.unlocked) == 0:

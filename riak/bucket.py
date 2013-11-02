@@ -19,6 +19,7 @@ under the License.
 """
 import mimetypes
 from riak.util import deprecateQuorumAccessors, deprecated
+import collections
 
 
 def deprecateBucketQuorumAccessors(klass):
@@ -53,7 +54,7 @@ class RiakBucket(object):
         :type name: string
         """
         try:
-            if isinstance(name, basestring):
+            if isinstance(name, str):
                 name = name.encode('ascii')
             else:
                 raise TypeError('Bucket name must be a string')
@@ -153,7 +154,7 @@ class RiakBucket(object):
         :rtype: :class:`RiakObject <riak.riak_object.RiakObject>`
         """
         try:
-            if isinstance(data, basestring):
+            if isinstance(data, str):
                 data = data.encode('ascii')
         except UnicodeError:
             raise TypeError('Unicode data values are not supported.')
@@ -244,7 +245,7 @@ class RiakBucket(object):
         return self._client.multiget(bkeys, r=r, pr=pr)
 
     def _get_resolver(self):
-        if callable(self._resolver):
+        if isinstance(self._resolver, collections.Callable):
             return self._resolver
         elif self._resolver is None:
             return self._client.resolver
@@ -252,7 +253,7 @@ class RiakBucket(object):
             raise TypeError("resolver is not a function")
 
     def _set_resolver(self, value):
-        if value is None or callable(value):
+        if value is None or isinstance(value, collections.Callable):
             self._resolver = value
         else:
             raise TypeError("resolver is not a function")
@@ -516,4 +517,4 @@ class RiakBucket(object):
     def __str__(self):
         return '<RiakBucket "{0}">'.format(self.name)
 
-from riak_object import RiakObject
+from .riak_object import RiakObject

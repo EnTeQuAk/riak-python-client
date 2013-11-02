@@ -22,6 +22,7 @@ from riak import ConflictError
 from riak.content import RiakContent
 from riak.util import deprecated
 import base64
+import collections
 
 
 def content_property(name, doc=None):
@@ -111,7 +112,7 @@ class RiakObject(object):
         :type key: string
         """
         try:
-            if isinstance(key, basestring):
+            if isinstance(key, str):
                 key = key.encode('ascii')
         except UnicodeError:
             raise TypeError('Unicode keys are not supported.')
@@ -221,7 +222,7 @@ class RiakObject(object):
        """)
 
     def _get_resolver(self):
-        if callable(self._resolver):
+        if isinstance(self._resolver, collections.Callable):
             return self._resolver
         elif self._resolver is None:
             return self.bucket.resolver
@@ -229,7 +230,7 @@ class RiakObject(object):
             raise TypeError("resolver is not a function")
 
     def _set_resolver(self, value):
-        if value is None or callable(value):
+        if value is None or isinstance(value, collections.Callable):
             self._resolver = value
         else:
             raise TypeError("resolver is not a function")

@@ -43,7 +43,7 @@ class RiakPbcStream(object):
     def __iter__(self):
         return self
 
-    def next(self):
+    def __next__(self):
         if self.finished:
             raise StopIteration
 
@@ -63,7 +63,7 @@ class RiakPbcStream(object):
         # weird responses when some other request comes after a
         # failed/prematurely-terminated one.
         try:
-            while self.next():
+            while next(self):
                 pass
         except StopIteration:
             pass
@@ -76,8 +76,8 @@ class RiakPbcKeyStream(RiakPbcStream):
 
     _expect = MSG_CODE_LIST_KEYS_RESP
 
-    def next(self):
-        response = super(RiakPbcKeyStream, self).next()
+    def __next__(self):
+        response = next(super(RiakPbcKeyStream, self))
 
         if response.done and len(response.keys) is 0:
             raise StopIteration
@@ -93,8 +93,8 @@ class RiakPbcMapredStream(RiakPbcStream):
 
     _expect = MSG_CODE_MAPRED_RESP
 
-    def next(self):
-        response = super(RiakPbcMapredStream, self).next()
+    def __next__(self):
+        response = next(super(RiakPbcMapredStream, self))
 
         if response.done and not response.HasField('response'):
             raise StopIteration
@@ -109,8 +109,8 @@ class RiakPbcBucketStream(RiakPbcStream):
 
     _expect = MSG_CODE_LIST_BUCKETS_RESP
 
-    def next(self):
-        response = super(RiakPbcBucketStream, self).next()
+    def __next__(self):
+        response = next(super(RiakPbcBucketStream, self))
 
         if response.done and len(response.buckets) is 0:
             raise StopIteration
@@ -131,8 +131,8 @@ class RiakPbcIndexStream(RiakPbcStream):
         self.index = index
         self.return_terms = return_terms
 
-    def next(self):
-        response = super(RiakPbcIndexStream, self).next()
+    def __next__(self):
+        response = next(super(RiakPbcIndexStream, self))
 
         if response.done and not (response.keys or
                                   response.results or

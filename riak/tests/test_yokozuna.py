@@ -20,13 +20,13 @@ class YZSearchTests(object):
         self.assertEquals(1, len(results['docs']))
         # TODO: check that docs return useful info
         result = results['docs'][0]
-        self.assertEquals(True, result.has_key('_yz_rk'))
-        self.assertEquals(u'user', result['_yz_rk'])
-        self.assertEquals(True, result.has_key('_yz_rb'))
-        self.assertEquals(u'yztest', result['_yz_rb'])
-        self.assertEquals(True, result.has_key('score'))
-        self.assertEquals(True, result.has_key('user_s'))
-        self.assertEquals(u'Z', result['user_s'])
+        self.assertEquals(True, '_yz_rk' in result)
+        self.assertEquals('user', result['_yz_rk'])
+        self.assertEquals(True, '_yz_rb' in result)
+        self.assertEquals('yztest', result['_yz_rb'])
+        self.assertEquals(True, 'score' in result)
+        self.assertEquals(True, 'user_s' in result)
+        self.assertEquals('Z', result['user_s'])
 
     @unittest.skipUnless(RUN_YZ, 'RUN_YZ is undefined')
     def test_yz_get_search_index(self):
@@ -129,7 +129,7 @@ class YZSearchTests(object):
     @unittest.skipUnless(RUN_YZ, 'RUN_YZ is undefined')
     def test_yz_search_utf8(self):
         bucket = self.client.bucket('yztest')
-        body = {"text_ja" : u"私はハイビスカスを食べるのが 大好き"}
+        body = {"text_ja" : "私はハイビスカスを食べるのが 大好き"}
         bucket.new("shift_jis", body).store()
         # TODO: fails due to lack of direct PB unicode support
         # results = bucket.search(u"text_ja:大好き")

@@ -18,7 +18,7 @@ specific language governing permissions and limitations
 under the License.
 """
 
-import httplib
+import http.client
 from riak.transports.pool import Pool
 from riak.transports.http.transport import RiakHttpTransport
 
@@ -31,9 +31,9 @@ class RiakHttpPool(Pool):
         self.client = client
         self.options = options
         if client.protocol == 'https':
-            self.connection_class = httplib.HTTPSConnection
+            self.connection_class = http.client.HTTPSConnection
         else:
-            self.connection_class = httplib.HTTPConnection
+            self.connection_class = http.client.HTTPConnection
         super(RiakHttpPool, self).__init__()
 
     def create_resource(self):
@@ -48,10 +48,10 @@ class RiakHttpPool(Pool):
 
 
 CONN_CLOSED_ERRORS = (
-    httplib.NotConnected,
-    httplib.IncompleteRead,
-    httplib.ImproperConnectionState,
-    httplib.BadStatusLine
+    http.client.NotConnected,
+    http.client.IncompleteRead,
+    http.client.ImproperConnectionState,
+    http.client.BadStatusLine
 )
 
 

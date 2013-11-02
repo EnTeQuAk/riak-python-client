@@ -48,7 +48,7 @@ def erlang_config(hash, depth=1):
 
     padding = '    ' * depth
     parent_padding = '    ' * (depth - 1)
-    values = (",\n%s" % padding).join(map(printable, hash.items()))
+    values = (",\n%s" % padding).join(map(printable, list(hash.items())))
     return "[\n%s%s\n%s]" % (padding, values, parent_padding)
 
 
@@ -114,7 +114,7 @@ class TestServer(object):
             self.vm_args = deep_merge(self.vm_args, vm_args)
 
         self.app_config = self.APP_CONFIG_DEFAULTS.copy()
-        for key, value in options.items():
+        for key, value in list(options.items()):
             if key in self.app_config:
                 self.app_config[key] = deep_merge(self.app_config[key], value)
         ring_dir = os.path.join(self.temp_dir, "data", "ring")
@@ -191,7 +191,8 @@ class TestServer(object):
             try:
                 socket.create_connection((self._http_ip(), self._http_port()),
                                          1.0)
-            except socket.error, (value, message):
+            except socket.error as xxx_todo_changeme:
+                (value, message) = xxx_todo_changeme.args
                 pass
             else:
                 listening = True
@@ -232,11 +233,11 @@ class TestServer(object):
 
                     temp_bin_file.write(line)
 
-                os.fchmod(temp_bin_file.fileno(), 0755)
+                os.fchmod(temp_bin_file.fileno(), 0o755)
 
     def write_vm_args(self):
         with open(self._vm_args_path(), 'wb') as vm_args:
-            for arg, value in self.vm_args.items():
+            for arg, value in list(self.vm_args.items()):
                 vm_args.write("%s %s\n" % (arg, value))
 
     def write_app_config(self):

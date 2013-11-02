@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import with_statement
+
 
 import os
 import random
@@ -191,7 +191,7 @@ class ClientTests(object):
             self.assertIsInstance(failure, tuple)
             self.assertEqual(failure[0], self.bucket_name)
             self.assertIn(failure[1], keys)
-            self.assertIsInstance(failure[2], StandardError)
+            self.assertIsInstance(failure[2], Exception)
 
     def test_multiget_notfounds(self):
         """

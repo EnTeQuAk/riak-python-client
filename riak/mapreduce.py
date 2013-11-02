@@ -98,7 +98,7 @@ class RiakMapReduce(object):
             raise ValueError('Already added a query, can\'t add an object.')
         else:
             if isinstance(key, Iterable) and \
-                    not isinstance(key, basestring):
+                    not isinstance(key, str):
                 for k in key:
                     self._inputs.append([bucket, k, data])
             else:
@@ -526,7 +526,7 @@ class RiakMapReducePhase(object):
         :type arg: string, dict, list
         """
         try:
-            if isinstance(function, basestring):
+            if isinstance(function, str):
                 function = function.encode('ascii')
         except UnicodeError:
             raise TypeError('Unicode encoded functions are not supported.')

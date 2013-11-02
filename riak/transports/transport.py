@@ -23,7 +23,7 @@ import threading
 import platform
 import os
 import json
-from feature_detect import FeatureDetection
+from .feature_detect import FeatureDetection
 
 
 class RiakTransport(FeatureDetection):
@@ -255,9 +255,9 @@ class RiakTransport(FeatureDetection):
                   'max_score': 0.0,
                   'docs': []}
         for bucket, key, data in mr_result:
-            if u'score' in data and data[u'score'][0] > result['max_score']:
-                result['max_score'] = data[u'score'][0]
-            result['docs'].append({u'id': key})
+            if 'score' in data and data['score'][0] > result['max_score']:
+                result['max_score'] = data['score'][0]
+            result['docs'].append({'id': key})
         return result
 
     def _get_index_mapred_emu(self, bucket, index, startkey, endkey=None):

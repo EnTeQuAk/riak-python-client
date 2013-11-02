@@ -92,7 +92,7 @@ class RiakContent(object):
         encoder = self._robject.bucket.get_encoder(self.content_type)
         if encoder:
             return encoder(value)
-        elif isinstance(value, basestring):
+        elif isinstance(value, str):
             return value.encode()
         else:
             raise TypeError('No encoder for non-string data '

@@ -17,7 +17,7 @@ under the License.
 """
 
 import platform
-from Queue import Queue
+from queue import Queue
 from threading import Thread, currentThread
 from riak.transports.pool import Pool, BadResource
 from random import SystemRandom

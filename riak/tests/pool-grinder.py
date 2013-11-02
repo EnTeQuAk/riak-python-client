@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from Queue import Queue
+from queue import Queue
 from threading import Thread
 import sys
 sys.path.append("../transports/")
@@ -42,7 +42,7 @@ def test():
             started.join()
             a.append(rand.uniform(0, 1))
             if psleep > 1:
-                print psleep
+                print(psleep)
             sleep(psleep)
 
     for i in range(n):
@@ -61,7 +61,7 @@ def test():
         thr.join()
 
     if set(pool.elements) != set(touched):
-        print set(pool.elements) - set(touched)
+        print(set(pool.elements) - set(touched))
         return False
     else:
         return True
@@ -71,7 +71,7 @@ count = 0
 while ret:
     ret = test()
     count += 1
-    print count
+    print(count)
 
 
 # INSTRUMENTED FUNCTION

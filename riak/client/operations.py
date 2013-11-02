@@ -16,9 +16,9 @@ specific language governing permissions and limitations
 under the License.
 """
 
-from transport import RiakClientTransport, retryable, retryableHttpOnly
-from multiget import multiget
-from index_page import IndexPage
+from .transport import RiakClientTransport, retryable, retryableHttpOnly
+from .multiget import multiget
+from .index_page import IndexPage
 
 
 class RiakClientOperations(RiakClientTransport):
@@ -308,7 +308,7 @@ class RiakClientOperations(RiakClientTransport):
         :type timeout: int
         """
         _validate_timeout(timeout)
-        if not isinstance(robj.key, basestring):
+        if not isinstance(robj.key, str):
             raise TypeError(
                 'key must be a string, instead got {0}'.format(repr(robj.key)))
 
@@ -592,7 +592,7 @@ class RiakClientOperations(RiakClientTransport):
         :param returnvalue: whether to return the updated value of the counter
         :type returnvalue: bool
         """
-        if type(value) not in (int, long):
+        if type(value) not in (int, int):
             raise TypeError("Counter update amount must be an integer")
         if value == 0:
             raise ValueError("Cannot increment counter by 0")
@@ -609,6 +609,6 @@ def _validate_timeout(timeout):
     Raises an exception if the given timeout is an invalid value.
     """
     if not (timeout is None or
-            (type(timeout) in (int, long) and
+            (type(timeout) in (int, int) and
              timeout > 0)):
         raise ValueError("timeout must be a positive integer")

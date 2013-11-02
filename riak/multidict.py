@@ -18,15 +18,15 @@ class MultiDict(DictMixin):
                 "MultiDict can only be called with one positional argument")
         if args:
             if hasattr(args[0], 'iteritems'):
-                items = list(args[0].iteritems())
+                items = list(args[0].items())
             elif hasattr(args[0], 'items'):
-                items = args[0].items()
+                items = list(args[0].items())
             else:
                 items = list(args[0])
             self._items = items
         else:
             self._items = []
-        self._items.extend(kw.iteritems())
+        self._items.extend(iter(kw.items()))
 
     def __getitem__(self, key):
         for k, v in self._items:
@@ -157,9 +157,9 @@ class MultiDict(DictMixin):
         if other is None:
             pass
         elif hasattr(other, 'items'):
-            self._items.extend(other.items())
+            self._items.extend(list(other.items()))
         elif hasattr(other, 'keys'):
-            for k in other.keys():
+            for k in list(other.keys()):
                 self._items.append((k, other[k]))
         else:
             for k, v in other:

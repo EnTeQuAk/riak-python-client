@@ -56,11 +56,11 @@ class ConflictError(RiakError):
         super(ConflictError, self).__init__(message)
 
 
-from client import RiakClient
-from bucket import RiakBucket
-from node import RiakNode
-from riak_object import RiakObject
-from mapreduce import RiakKeyFilter, RiakMapReduce, RiakLink
+from .client import RiakClient
+from .bucket import RiakBucket
+from .node import RiakNode
+from .riak_object import RiakObject
+from .mapreduce import RiakKeyFilter, RiakMapReduce, RiakLink
 
 ONE = "one"
 ALL = "all"

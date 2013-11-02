@@ -46,7 +46,7 @@ class RiakHttpStream(object):
             self.response_done = True
         self.buffer += chunk
 
-    def next(self):
+    def __next__(self):
         raise NotImplementedError
 
     def close(self):
@@ -56,7 +56,7 @@ class RiakHttpStream(object):
 class RiakHttpJsonStream(RiakHttpStream):
     _json_field = None
 
-    def next(self):
+    def __next__(self):
         while '}' not in self.buffer and not self.response_done:
             self._read()
 
@@ -74,14 +74,14 @@ class RiakHttpKeyStream(RiakHttpJsonStream):
     """
     Streaming iterator for list-keys over HTTP
     """
-    _json_field = u'keys'
+    _json_field = 'keys'
 
 
 class RiakHttpBucketStream(RiakHttpJsonStream):
     """
     Streaming iterator for list-buckets over HTTP
     """
-    _json_field = u'buckets'
+    _json_field = 'buckets'
 
 
 class RiakHttpMultipartStream(RiakHttpStream):
@@ -97,7 +97,7 @@ class RiakHttpMultipartStream(RiakHttpStream):
         self.next_boundary = None
         self.seen_first = False
 
-    def next(self):
+    def __next__(self):
         # multipart/mixed starts with a boundary, then the first part.
         if not self.seen_first:
             self.read_until_boundary()
@@ -133,8 +133,8 @@ class RiakHttpMapReduceStream(RiakHttpMultipartStream):
     Streaming iterator for MapReduce over HTTP
     """
 
-    def next(self):
-        message = super(RiakHttpMapReduceStream, self).next()
+    def __next__(self):
+        message = next(super(RiakHttpMapReduceStream, self))
         payload = json.loads(message.get_payload())
         return payload['phase'], payload['data']
 
@@ -149,17 +149,17 @@ class RiakHttpIndexStream(RiakHttpMultipartStream):
         self.index = index
         self.return_terms = return_terms
 
-    def next(self):
-        message = super(RiakHttpIndexStream, self).next()
+    def __next__(self):
+        message = next(super(RiakHttpIndexStream, self))
         payload = json.loads(message.get_payload())
-        if u'keys' in payload:
-            return payload[u'keys']
-        elif u'results' in payload:
-            structs = payload[u'results']
+        if 'keys' in payload:
+            return payload['keys']
+        elif 'results' in payload:
+            structs = payload['results']
             # Format is {"results":[{"2ikey":"primarykey"}, ...]}
-            return [self._decode_pair(d.items()[0]) for d in structs]
-        elif u'continuation' in payload:
-            return CONTINUATION(payload[u'continuation'])
+            return [self._decode_pair(list(d.items())[0]) for d in structs]
+        elif 'continuation' in payload:
+            return CONTINUATION(payload['continuation'])
 
     def _decode_pair(self, pair):
         return (decode_index_value(self.index, pair[0]), pair[1])
