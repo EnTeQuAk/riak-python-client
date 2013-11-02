@@ -79,7 +79,7 @@ class RiakHttpTransport(RiakHttpConnection, RiakHttpResources, RiakHttpCodec,
         status, _, body = self._request('GET', self.stats_path(),
                                         {'Accept': 'application/json'})
         if status == 200:
-            return json.loads(body)
+            return json.loads(body.decode('utf-8'))
         else:
             return None
 
@@ -104,7 +104,7 @@ class RiakHttpTransport(RiakHttpConnection, RiakHttpResources, RiakHttpCodec,
         status, _, body = self._request('GET', '/',
                                         {'Accept': 'application/json'})
         if status == 200:
-            return json.loads(body)
+            return json.loads(body.decode('utf-8'))
         else:
             return {}
 
@@ -130,7 +130,11 @@ class RiakHttpTransport(RiakHttpConnection, RiakHttpResources, RiakHttpCodec,
                   'timeout': timeout}
         url = self.object_path(robj.bucket.name, robj.key, **params)
         headers = self._build_put_headers(robj, if_none_match=if_none_match)
-        content = bytearray(robj.encoded_data)
+
+        if isinstance(robj.encoded_data, str):
+            content = bytes(robj.encoded_data, 'utf-8')
+        else:
+            content = bytearray(robj.encoded_data)
 
         if robj.key is None:
             expect = [201]
@@ -171,7 +175,7 @@ class RiakHttpTransport(RiakHttpConnection, RiakHttpResources, RiakHttpCodec,
         status, _, body = self._request('GET', url)
 
         if status == 200:
-            props = json.loads(body)
+            props = json.loads(body.decode('utf-8'))
             return props['keys']
         else:
             raise Exception('Error listing keys.')
@@ -193,7 +197,7 @@ class RiakHttpTransport(RiakHttpConnection, RiakHttpResources, RiakHttpCodec,
         status, headers, body = self._request('GET', url)
 
         if status == 200:
-            props = json.loads(body)
+            props = json.loads(body.decode('utf-8'))
             return props['buckets']
         else:
             raise Exception('Error getting buckets.')
@@ -223,7 +227,7 @@ class RiakHttpTransport(RiakHttpConnection, RiakHttpResources, RiakHttpCodec,
         status, headers, body = self._request('GET', url)
 
         if status == 200:
-            props = json.loads(body)
+            props = json.loads(body.decode('utf-8'))
             return props['props']
         else:
             raise Exception('Error getting bucket properties.')
@@ -279,7 +283,7 @@ class RiakHttpTransport(RiakHttpConnection, RiakHttpResources, RiakHttpCodec,
                 'Error running MapReduce operation. Headers: %s Body: %s' %
                 (repr(headers), repr(body)))
 
-        result = json.loads(body)
+        result = json.loads(body.decode('utf-8'))
         return result
 
     def stream_mapred(self, inputs, query, timeout=None):
@@ -307,7 +311,7 @@ class RiakHttpTransport(RiakHttpConnection, RiakHttpResources, RiakHttpCodec,
         url = self.index_path(bucket, index, startkey, endkey, **params)
         status, headers, body = self._request('GET', url)
         self.check_http_code(status, [200])
-        json_data = json.loads(body)
+        json_data = json.loads(body.decode('utf-8'))
         if return_terms and 'results' in json_data:
             results = []
             for result in json_data['results'][:]:
