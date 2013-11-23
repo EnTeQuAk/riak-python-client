@@ -18,7 +18,7 @@ under the License.
 
 from __future__ import absolute_import
 
-import http.client
+from riak._compat import http_client
 
 
 class RiakHttpConnection(object):
@@ -65,9 +65,9 @@ class RiakHttpConnection(object):
         """
         try:
             self._connection.close()
-        except http.client.NotConnected:
+        except http_client.NotConnected:
             pass
 
     # These are set by the RiakHttpTransport initializer
-    _connection_class = http.client.HTTPConnection
+    _connection_class = http_client.HTTPConnection
     _node = None

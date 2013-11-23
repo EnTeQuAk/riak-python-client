@@ -1,13 +1,10 @@
 
 
-from __future__ import absolute_import
+from __future__ import absolute_import, unicode_literals
 import os.path
 import platform
 
-if platform.python_version() < '2.7':
-    unittest = __import__('unittest2')
-else:
-    import unittest
+from riak.compat import unittest
 
 
 def additional_tests():

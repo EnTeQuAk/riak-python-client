@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-
 from __future__ import absolute_import
+
 import os
 import pickle
 import copy
@@ -9,15 +9,7 @@ import platform
 from time import sleep
 from riak import ConflictError, RiakBucket
 from riak.resolver import default_resolver, last_written_resolver
-try:
-    import simplejson as json
-except ImportError:
-    import json
-
-if platform.python_version() < '2.7':
-    unittest = __import__('unittest2')
-else:
-    import unittest
+from riak.compat import json, unittest
 
 
 class NotJsonSerializable(object):

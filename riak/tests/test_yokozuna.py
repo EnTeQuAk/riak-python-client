@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
 
-
 from __future__ import absolute_import
+
 import os
 import platform
 import time
-if platform.python_version() < '2.7':
-    unittest = __import__('unittest2')
-else:
-    import unittest
+
+from riak.compat import unittest
 
 RUN_YZ = int(os.environ.get('RUN_YZ', '0'))
 

@@ -18,19 +18,15 @@ under the License.
 
 from __future__ import absolute_import
 
-
+import os
+from random import SystemRandom
+from time import sleep
 import platform
 from queue import Queue
 from threading import Thread, currentThread
-from riak.transports.pool import Pool, BadResource
-from random import SystemRandom
-from time import sleep
 
-if platform.python_version() < '2.7':
-    unittest = __import__('unittest2')
-else:
-    import unittest
-import os
+from riak.transports.pool import Pool, BadResource
+from riak.compat import unittest
 
 
 class SimplePool(Pool):

@@ -1,15 +1,10 @@
 
-
 from __future__ import absolute_import
 import platform
 
-if platform.python_version() < '2.7':
-    unittest = __import__('unittest2')
-else:
-    import unittest
-
 from riak.riak_object import RiakObject
 from riak.bucket import RiakBucket
+from riak.compat import unittest
 from riak.tests.test_all import BaseTestCase
 
 

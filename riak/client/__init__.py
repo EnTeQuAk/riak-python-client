@@ -22,12 +22,6 @@ under the License.
 
 from __future__ import absolute_import
 
-
-try:
-    import simplejson as json
-except ImportError:
-    import json
-
 import random
 from weakref import WeakValueDictionary
 from riak.client.operations import RiakClientOperations
@@ -41,6 +35,8 @@ from riak.transports.http import RiakHttpPool
 from riak.util import deprecated
 from riak.util import deprecateQuorumAccessors
 from riak.util import lazy_property
+
+from riak._compat import json
 
 
 def default_encoder(obj):

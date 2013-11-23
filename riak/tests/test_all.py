@@ -1,19 +1,15 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import absolute_import
+from __future__ import absolute_import, unicode_literals
 import os
 import random
 import platform
-
-if platform.python_version() < '2.7':
-    unittest = __import__('unittest2')
-else:
-    import unittest
 
 from riak.client import RiakClient
 from riak.mapreduce import RiakKeyFilter
 from riak import key_filter
 from riak.riak_object import RiakObject
+from riak.compat import unittest
 
 from riak.test_server import TestServer
 

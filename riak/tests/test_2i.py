@@ -1,15 +1,12 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import absolute_import, unicode_literals
 
-from __future__ import absolute_import
 import os
 import platform
-if platform.python_version() < '2.7':
-    unittest = __import__('unittest2')
-else:
-    import unittest
 
 from riak import RiakError
+from riak.compat import unittest
 
 SKIP_INDEXES = int(os.environ.get('SKIP_INDEXES', '0'))
 

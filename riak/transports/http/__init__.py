@@ -20,13 +20,13 @@ under the License.
 
 from __future__ import absolute_import
 
-import http.client
 import socket
 from riak.transports.pool import Pool
 from riak.transports.http.transport import RiakHttpTransport
+from riak._compat import http_client
 
 
-class NoNagleHTTPConnection(http.client.HTTPConnection):
+class NoNagleHTTPConnection(http_client.HTTPConnection):
 
     """
     Setup a connection class which does not use Nagle - deal with
@@ -37,7 +37,7 @@ class NoNagleHTTPConnection(http.client.HTTPConnection):
         """
         Set TCP_NODELAY on socket
         """
-        http.client.HTTPConnection.connect(self)
+        http_client.HTTPConnection.connect(self)
         self.sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
 
 
@@ -51,7 +51,7 @@ class RiakHttpPool(Pool):
         self.client = client
         self.options = options
         if client.protocol == 'https':
-            self.connection_class = http.client.HTTPSConnection
+            self.connection_class = http_client.HTTPSConnection
         else:
             self.connection_class = NoNagleHTTPConnection
         super(RiakHttpPool, self).__init__()
@@ -68,10 +68,10 @@ class RiakHttpPool(Pool):
 
 
 CONN_CLOSED_ERRORS = (
-    http.client.NotConnected,
-    http.client.IncompleteRead,
-    http.client.ImproperConnectionState,
-    http.client.BadStatusLine
+    http_client.NotConnected,
+    http_client.IncompleteRead,
+    http_client.ImproperConnectionState,
+    http_client.BadStatusLine
 )
 
 

@@ -21,14 +21,6 @@ under the License.
 
 from __future__ import absolute_import
 
-
-try:
-    import simplejson as json
-except ImportError:
-    import json
-
-
-import http.client
 from xml.dom.minidom import Document
 from riak.transports.transport import RiakTransport
 from riak.transports.http.resources import RiakHttpResources
@@ -42,6 +34,8 @@ from riak.transports.http.stream import (
 from riak import RiakError
 from riak.util import decode_index_value
 
+from riak._compat import json, http_client
+
 
 class RiakHttpTransport(RiakHttpConnection, RiakHttpResources, RiakHttpCodec,
                         RiakTransport):
@@ -53,7 +47,7 @@ class RiakHttpTransport(RiakHttpConnection, RiakHttpResources, RiakHttpCodec,
 
     def __init__(self, node=None,
                  client=None,
-                 connection_class=http.client.HTTPConnection,
+                 connection_class=http_client.HTTPConnection,
                  client_id=None,
                  **unused_options):
         """

@@ -16,17 +16,12 @@ specific language governing permissions and limitations
 under the License.
 """
 
-from __future__ import absolute_import
-
+from __future__ import absolute_import, unicode_literals
 
 import platform
 
-if platform.python_version() < '2.7':
-    unittest = __import__('unittest2')
-else:
-    import unittest
-
 from riak.transports.feature_detect import FeatureDetection
+from riak.compat import unittest
 
 
 class IncompleteTransport(FeatureDetection):
