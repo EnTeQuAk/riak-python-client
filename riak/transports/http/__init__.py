@@ -20,7 +20,6 @@ under the License.
 
 from __future__ import absolute_import
 
-
 import http.client
 import socket
 from riak.transports.pool import Pool

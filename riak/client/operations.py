@@ -16,7 +16,6 @@ specific language governing permissions and limitations
 under the License.
 """
 
-
 from riak.client.transport import RiakClientTransport, retryable, retryableHttpOnly
 from riak.client.multiget import multiget
 from riak.client.index_page import IndexPage

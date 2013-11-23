@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 
-
 from __future__ import print_function
-
 from __future__ import absolute_import
-from Queue import Queue
+
+try:
+    from Queue import Queue
+except ImportError:
+    from queue import Queue
+
 from threading import Thread
 import sys
 sys.path.append("../transports/")

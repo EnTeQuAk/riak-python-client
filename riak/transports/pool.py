@@ -26,7 +26,6 @@ import collections
 
 # This file is a rough port of the Innertube Ruby library
 class BadResource(Exception):
-
     """
     Users of a :class:`Pool` should raise this error when the pool
     element currently in-use is bad and should be removed from the

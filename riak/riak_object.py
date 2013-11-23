@@ -122,7 +122,7 @@ class RiakObject(object):
         """
         try:
             if isinstance(key, str):
-                key = key.encode('ascii')
+                key.encode('ascii')
         except UnicodeError:
             raise TypeError('Unicode keys are not supported.')
 

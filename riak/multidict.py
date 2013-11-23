@@ -4,13 +4,11 @@
 
 try:
     from UserDict import UserDict
-    from UserDict import DictMixin
 except ImportError:
-    from collections import UserDict
-    from collections import MutableMapping as DictMixin
+    from collections import MutableMapping
 
 
-class MultiDict(DictMixin):
+class MultiDict(MutableMapping):
 
     """
     An ordered dictionary that can have multiple values for each key.

@@ -17,7 +17,6 @@ under the License.
 """
 
 from __future__ import print_function
-
 from __future__ import absolute_import
 
 import os
@@ -99,7 +98,7 @@ class Benchmark(object):
     def __iter__(self):
         return self
 
-    def next(self):
+    def __next__(self):
         """
         Runs the next iteration of the benchmark.
         """
