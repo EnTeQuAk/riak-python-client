@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 
-
 from __future__ import absolute_import
 import glob
 import os
+import sys
 import subprocess
-import platform
 from setuptools import setup, find_packages
 from version import get_version
 
@@ -22,7 +21,8 @@ def make_docs():
 install_requires = []
 requires = []
 tests_require = []
-if platform.python_version() < '2.7':
+
+if sys.version_info[:2] == (2, 7):
     tests_require.append("unittest2")
 
 setup(
