@@ -18,6 +18,9 @@ specific language governing permissions and limitations
 under the License.
 """
 
+from __future__ import absolute_import
+
+
 from collections import Iterable, namedtuple
 from riak import RiakError
 
@@ -27,12 +30,14 @@ RiakLink = namedtuple("RiakLink", ("bucket", "key", "tag"))
 
 
 class RiakMapReduce(object):
+
     """
     The RiakMapReduce object allows you to build up and run a
     map/reduce operation on Riak. Most methods return the object on
     which it was called, modified with new information, so you can
     chain calls together to build the job.
     """
+
     def __init__(self, client):
         """
         Construct a Map/Reduce object.
@@ -98,7 +103,7 @@ class RiakMapReduce(object):
             raise ValueError('Already added a query, can\'t add an object.')
         else:
             if isinstance(key, Iterable) and \
-                    not isinstance(key, basestring):
+                    not isinstance(key, str):
                 for k in key:
                     self._inputs.append([bucket, k, data])
             else:
@@ -358,9 +363,9 @@ class RiakMapReduce(object):
 
         return query, link_results_flag
 
-    ##
+    #
     # Start Shortcuts to built-ins
-    ##
+    #
     def map_values(self, options=None):
         """
         Adds the Javascript built-in ``Riak.mapValues`` to the query
@@ -500,6 +505,7 @@ class RiakMapReduce(object):
 
 
 class RiakMapReducePhase(object):
+
     """
     The RiakMapReducePhase holds information about a Map or Reduce
     phase in a RiakMapReduce operation.
@@ -526,7 +532,7 @@ class RiakMapReducePhase(object):
         :type arg: string, dict, list
         """
         try:
-            if isinstance(function, basestring):
+            if isinstance(function, str):
                 function = function.encode('ascii')
         except UnicodeError:
             raise TypeError('Unicode encoded functions are not supported.')
@@ -569,6 +575,7 @@ class RiakMapReducePhase(object):
 
 
 class RiakLinkPhase(object):
+
     """
     The RiakLinkPhase object holds information about a Link phase in a
     map/reduce operation.
@@ -605,6 +612,7 @@ class RiakLinkPhase(object):
 
 
 class RiakKeyFilter(object):
+
     """
     A helper class for building up lists of key filters. Unknown
     methods are treated as filters to be added; ``&`` and ``|`` create
@@ -666,10 +674,12 @@ class RiakKeyFilter(object):
 
 
 class RiakMapReduceChain(object):
+
     """
     Mixin to add chaining from the client object directly into a
     MapReduce operation.
     """
+
     def add(self, *args):
         """
         Start assembling a Map/Reduce operation. A shortcut for

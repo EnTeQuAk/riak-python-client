@@ -18,10 +18,15 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 """
+
+from __future__ import absolute_import
+
+
 from riak import ConflictError
 from riak.content import RiakContent
 from riak.util import deprecated
 import base64
+import collections
 
 
 def content_property(name, doc=None):
@@ -29,6 +34,7 @@ def content_property(name, doc=None):
     Delegates a property to the first sibling in a RiakObject, raising
     an error when the object is in conflict.
     """
+
     def _setter(self, value):
         if len(self.siblings) == 0:
             # In this case, assume that what the user wants is to
@@ -53,6 +59,7 @@ def content_method(name):
     Delegates a method to the first sibling in a RiakObject, raising
     an error when the object is in conflict.
     """
+
     def _delegate(self, *args, **kwargs):
         if len(self.siblings) != 1:
             raise ConflictError()
@@ -64,6 +71,7 @@ def content_method(name):
 
 
 class VClock(object):
+
     """
     A representation of a vector clock received from Riak.
     """
@@ -94,10 +102,12 @@ class VClock(object):
 
 
 class RiakObject(object):
+
     """
     The RiakObject holds meta information about a Riak object, plus the
     object's data.
     """
+
     def __init__(self, client, bucket, key=None):
         """
         Construct a new RiakObject.
@@ -111,7 +121,7 @@ class RiakObject(object):
         :type key: string
         """
         try:
-            if isinstance(key, basestring):
+            if isinstance(key, str):
                 key = key.encode('ascii')
         except UnicodeError:
             raise TypeError('Unicode keys are not supported.')
@@ -221,7 +231,7 @@ class RiakObject(object):
        """)
 
     def _get_resolver(self):
-        if callable(self._resolver):
+        if isinstance(self._resolver, collections.Callable):
             return self._resolver
         elif self._resolver is None:
             return self.bucket.resolver
@@ -229,7 +239,7 @@ class RiakObject(object):
             raise TypeError("resolver is not a function")
 
     def _set_resolver(self, value):
-        if value is None or callable(value):
+        if value is None or isinstance(value, collections.Callable):
             self._resolver = value
         else:
             raise TypeError("resolver is not a function")

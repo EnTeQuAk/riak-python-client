@@ -16,12 +16,17 @@ specific language governing permissions and limitations
 under the License.
 """
 
+from __future__ import absolute_import
+
+
 from contextlib import contextmanager
 import threading
+import collections
 
 
 # This file is a rough port of the Innertube Ruby library
-class BadResource(StandardError):
+class BadResource(Exception):
+
     """
     Users of a :class:`Pool` should raise this error when the pool
     element currently in-use is bad and should be removed from the
@@ -31,11 +36,13 @@ class BadResource(StandardError):
 
 
 class Element(object):
+
     """
     A member of the :class:`Pool`, a container for the actual resource
     being pooled and a marker for whether the resource is currently
     claimed.
     """
+
     def __init__(self, obj):
         """
         Creates a new Element, wrapping the passed object as the
@@ -53,6 +60,7 @@ class Element(object):
 
 
 class Pool(object):
+
     """
     A thread-safe, reentrant resource pool, ported from the
     "Innertube" Ruby library. Pool should be subclassed to implement
@@ -109,7 +117,7 @@ class Pool(object):
         if not _filter:
             def _filter(obj):
                 return True
-        elif not callable(_filter):
+        elif not isinstance(_filter, collections.Callable):
             raise TypeError("_filter is not a callable")
 
         element = None
@@ -183,6 +191,7 @@ class Pool(object):
 
 
 class PoolIterator(object):
+
     """
     Iterates over a snapshot of the pool in a thread-safe manner,
     eventually touching all resources that were known when the
@@ -206,7 +215,7 @@ class PoolIterator(object):
     def __iter__(self):
         return self
 
-    def next(self):
+    def __next__(self):
         if len(self.targets) == 0:
             raise StopIteration
         if len(self.unlocked) == 0:

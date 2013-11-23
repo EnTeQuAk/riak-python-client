@@ -16,6 +16,9 @@ specific language governing permissions and limitations
 under the License.
 """
 
+from __future__ import absolute_import
+
+
 from collections import namedtuple, Sequence
 
 
@@ -23,6 +26,7 @@ CONTINUATION = namedtuple('Continuation', ['c'])
 
 
 class IndexPage(Sequence, object):
+
     """
     Encapsulates a single page of results from a secondary index
     query, with the ability to iterate over results (if not streamed),
@@ -33,6 +37,7 @@ class IndexPage(Sequence, object):
     automatically by the client and does not need to be instantiated
     elsewhere.
     """
+
     def __init__(self, client, bucket, index, startkey, endkey, return_terms,
                  max_results):
         self.client = client

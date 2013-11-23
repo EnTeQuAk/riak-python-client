@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+
+
+from __future__ import absolute_import
 import os
 import platform
 import time
@@ -11,28 +14,29 @@ RUN_YZ = int(os.environ.get('RUN_YZ', '0'))
 
 
 class YZSearchTests(object):
+
     @unittest.skipUnless(RUN_YZ, 'RUN_YZ is undefined')
     def test_yz_search_from_bucket(self):
         bucket = self.client.bucket('yztest')
         bucket.new("user", {"user_s": "Z"}).store()
         time.sleep(1)
         results = bucket.search("user_s:Z")
-        self.assertEquals(1, len(results['docs']))
+        self.assertEqual(1, len(results['docs']))
         # TODO: check that docs return useful info
         result = results['docs'][0]
         self.assertIn('_yz_rk', result)
-        self.assertEquals(u'user', result['_yz_rk'])
+        self.assertEqual('user', result['_yz_rk'])
         self.assertIn('_yz_rb', result)
-        self.assertEquals(u'yztest', result['_yz_rb'])
+        self.assertEqual('yztest', result['_yz_rb'])
         self.assertIn('score', result)
         self.assertIn('user_s', result)
-        self.assertEquals(u'Z', result['user_s'])
+        self.assertEqual('Z', result['user_s'])
 
     @unittest.skipUnless(RUN_YZ, 'RUN_YZ is undefined')
     def test_yz_get_search_index(self):
         index = self.client.get_search_index('yztest')
-        self.assertEquals('yztest', index['name'])
-        self.assertEquals('_yz_default', index['schema'])
+        self.assertEqual('yztest', index['name'])
+        self.assertEqual('_yz_default', index['schema'])
         with self.assertRaises(Exception):
             self.client.get_search_index('NOTyztest')
 
@@ -55,7 +59,7 @@ class YZSearchTests(object):
     @unittest.skipUnless(RUN_YZ, 'RUN_YZ is undefined')
     def test_yz_list_search_indexes(self):
         indexes = self.client.list_search_indexes()
-        self.assertEquals(1, len(indexes))
+        self.assertEqual(1, len(indexes))
 
     @unittest.skipUnless(RUN_YZ, 'RUN_YZ is undefined')
     def test_yz_create_schema(self):
@@ -81,8 +85,8 @@ class YZSearchTests(object):
         schema_name = 'yzgoodschema'
         self.assertTrue(self.client.create_search_schema(schema_name, content))
         schema = self.client.get_search_schema(schema_name)
-        self.assertEquals(schema_name, schema['name'])
-        self.assertEquals(content, schema['content'])
+        self.assertEqual(schema_name, schema['name'])
+        self.assertEqual(content, schema['content'])
 
     @unittest.skipUnless(RUN_YZ, 'RUN_YZ is undefined')
     def test_yz_create_bad_schema(self):
@@ -106,35 +110,35 @@ class YZSearchTests(object):
         time.sleep(1)
         # multiterm
         results = bucket.search("username_s:(F OR H)")
-        self.assertEquals(2, len(results['docs']))
+        self.assertEqual(2, len(results['docs']))
         # boolean
         results = bucket.search("username_s:Z AND name_s:ryan")
-        self.assertEquals(1, len(results['docs']))
+        self.assertEqual(1, len(results['docs']))
         # range
         results = bucket.search("age_i:[30 TO 33]")
-        self.assertEquals(2, len(results['docs']))
+        self.assertEqual(2, len(results['docs']))
         # phrase
         results = bucket.search('name_s:"bryan fink"')
-        self.assertEquals(1, len(results['docs']))
+        self.assertEqual(1, len(results['docs']))
         # wildcard
         results = bucket.search('name_s:*ryan*')
-        self.assertEquals(2, len(results['docs']))
+        self.assertEqual(2, len(results['docs']))
         # regexp
         results = bucket.search('name_s:/br.*/')
-        self.assertEquals(2, len(results['docs']))
+        self.assertEqual(2, len(results['docs']))
         # Parameters:
         # limit
         results = bucket.search('username_s:*', rows=2)
-        self.assertEquals(2, len(results['docs']))
+        self.assertEqual(2, len(results['docs']))
         # sort
         results = bucket.search('username_s:*', sort="age_i asc")
-        self.assertEquals(14, int(results['docs'][0]['age_i']))
+        self.assertEqual(14, int(results['docs'][0]['age_i']))
 
     @unittest.skipUnless(RUN_YZ, 'RUN_YZ is undefined')
     def test_yz_search_utf8(self):
         bucket = self.client.bucket('yztest')
-        body = {"text_ja": u"私はハイビスカスを食べるのが 大好き"}
+        body = {"text_ja": "私はハイビスカスを食べるのが 大好き"}
         bucket.new("shift_jis", body).store()
         # TODO: fails due to lack of direct PB unicode support
         # results = bucket.search(u"text_ja:大好き")
-        # self.assertEquals(1, len(results['docs']))
+        # self.assertEqual(1, len(results['docs']))

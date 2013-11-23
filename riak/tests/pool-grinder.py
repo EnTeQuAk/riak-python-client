@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 
+
+from __future__ import print_function
+
+from __future__ import absolute_import
 from Queue import Queue
 from threading import Thread
 import sys
@@ -10,6 +14,7 @@ from time import sleep
 
 
 class SimplePool(Pool):
+
     def __init__(self):
         self.count = 0
         Pool.__init__(self)
@@ -23,6 +28,7 @@ class SimplePool(Pool):
 
 
 class EmptyListPool(Pool):
+
     def create_resource(self):
         return []
 
@@ -42,7 +48,7 @@ def test():
             started.join()
             a.append(rand.uniform(0, 1))
             if psleep > 1:
-                print psleep
+                print(psleep)
             sleep(psleep)
 
     for i in range(n):
@@ -61,7 +67,7 @@ def test():
         thr.join()
 
     if set(pool.elements) != set(touched):
-        print set(pool.elements) - set(touched)
+        print(set(pool.elements) - set(touched))
         return False
     else:
         return True
@@ -71,16 +77,16 @@ count = 0
 while ret:
     ret = test()
     count += 1
-    print count
+    print(count)
 
 
 # INSTRUMENTED FUNCTION
 
 #     def __claim_elements(self):
-#         #print 'waiting for self lock'
+# print 'waiting for self lock'
 #         with self.lock:
-#             if self.__all_claimed(): # and self.unlocked:
-#                 #print 'waiting on releaser lock'
+# if self.__all_claimed(): # and self.unlocked:
+# print 'waiting on releaser lock'
 #                 with self.releaser:
 #                     print 'waiting for release'
 #                     print 'targets', self.targets
@@ -93,7 +99,7 @@ while ret:
 #             for element in self.targets:
 #                 if element.tomb:
 #                     self.targets.remove(element)
-#                     #self.unlocked.remove(element)
+# self.unlocked.remove(element)
 #                     continue
 #                 if not element.claimed:
 #                     self.targets.remove(element)

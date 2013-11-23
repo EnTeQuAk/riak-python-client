@@ -1,3 +1,6 @@
+
+
+from __future__ import absolute_import
 import platform
 
 if platform.python_version() < '2.7':
@@ -11,6 +14,7 @@ from riak.tests.test_all import BaseTestCase
 
 
 class RiakBucketRichComparisonTest(unittest.TestCase):
+
     def test_bucket_eq(self):
         a = RiakBucket('client', 'a')
         b = RiakBucket('client', 'a')
@@ -30,6 +34,7 @@ class RiakBucketRichComparisonTest(unittest.TestCase):
 
 
 class RiakObjectComparisonTest(unittest.TestCase):
+
     def test_object_eq(self):
         a = RiakObject(None, 'bucket', 'key')
         b = RiakObject(None, 'bucket', 'key')
@@ -60,6 +65,7 @@ class RiakObjectComparisonTest(unittest.TestCase):
 
 
 class RiakClientComparisonTest(unittest.TestCase, BaseTestCase):
+
     def test_client_eq(self):
         self.protocol = 'http'
         a = self.create_client(host='host1', http_port=11)

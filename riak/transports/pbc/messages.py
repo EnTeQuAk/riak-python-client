@@ -16,6 +16,9 @@ specific language governing permissions and limitations
 under the License.
 """
 
+from __future__ import absolute_import
+
+
 import riak_pb
 
 

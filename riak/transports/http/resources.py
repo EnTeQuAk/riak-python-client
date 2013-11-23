@@ -16,13 +16,17 @@ specific language governing permissions and limitations
 under the License.
 """
 
+from __future__ import absolute_import
+
+
 import re
-from urllib import quote_plus, urlencode
+from urllib.parse import quote_plus, urlencode
 from riak import RiakError
 from riak.util import lazy_property
 
 
 class RiakHttpResources(object):
+
     """
     Methods for RiakHttpTransport related to URL generation, i.e.
     creating the proper paths.
@@ -178,7 +182,7 @@ def mkpath(*segments, **query):
         if query[key] in [False, True]:
             _query[key] = str(query[key]).lower()
         elif query[key] is not None:
-            if isinstance(query[key], unicode):
+            if isinstance(query[key], str):
                 _query[key] = query[key].encode('utf-8')
             else:
                 _query[key] = query[key]

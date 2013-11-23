@@ -16,6 +16,9 @@ specific language governing permissions and limitations
 under the License.
 """
 
+from __future__ import absolute_import
+
+
 import platform
 
 if platform.python_version() < '2.7':
@@ -31,6 +34,7 @@ class IncompleteTransport(FeatureDetection):
 
 
 class DummyTransport(FeatureDetection):
+
     def __init__(self, version):
         self._version = version
 
@@ -39,6 +43,7 @@ class DummyTransport(FeatureDetection):
 
 
 class FeatureDetectionTest(unittest.TestCase):
+
     def test_implements_server_version(self):
         t = IncompleteTransport()
 

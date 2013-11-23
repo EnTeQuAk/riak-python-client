@@ -16,16 +16,20 @@ specific language governing permissions and limitations
 under the License.
 """
 
+from __future__ import absolute_import
+
+
 import socket
 import struct
 from riak import RiakError
-from messages import (
+from riak.transports.pbc.messages import (
     MESSAGE_CLASSES,
     MSG_CODE_ERROR_RESP
 )
 
 
 class RiakPbcConnection(object):
+
     """
     Connection-related methods for RiakPbcTransport.
     """

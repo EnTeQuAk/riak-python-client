@@ -15,6 +15,10 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 """
+
+from __future__ import absolute_import
+
+
 import math
 import time
 from threading import RLock
@@ -22,6 +26,7 @@ from riak.util import deprecated
 
 
 class Decaying(object):
+
     """
     A float value which decays exponentially toward 0 over time. This
     is used internally to select nodes for new connections that have
@@ -71,6 +76,7 @@ class Decaying(object):
 
 
 class RiakNode(object):
+
     """
     The internal representation of a Riak node to which the client can
     connect. Encapsulates both the configuration for the node and

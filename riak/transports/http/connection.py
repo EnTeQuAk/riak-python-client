@@ -16,10 +16,14 @@ specific language governing permissions and limitations
 under the License.
 """
 
-import httplib
+from __future__ import absolute_import
+
+
+import http.client
 
 
 class RiakHttpConnection(object):
+
     """
     Connection and low-level request methods for RiakHttpTransport.
     """
@@ -62,9 +66,9 @@ class RiakHttpConnection(object):
         """
         try:
             self._connection.close()
-        except httplib.NotConnected:
+        except http.client.NotConnected:
             pass
 
     # These are set by the RiakHttpTransport initializer
-    _connection_class = httplib.HTTPConnection
+    _connection_class = http.client.HTTPConnection
     _node = None

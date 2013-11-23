@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 
+
+from __future__ import absolute_import
 from riak.mapreduce import RiakMapReduce
 from riak import key_filter, RiakError
 
 
 class LinkTests(object):
+
     def test_store_and_get_links(self):
         # Create the object...
         bucket = self.client.bucket(self.bucket_name)
@@ -60,6 +63,7 @@ class LinkTests(object):
 
 
 class ErlangMapReduceTests(object):
+
     def test_erlang_map_reduce(self):
         # Create the object...
         bucket = self.client.bucket(self.bucket_name)
@@ -105,23 +109,24 @@ class ErlangMapReduceTests(object):
         bucket.new("bar", 2).store()
         bucket.new("baz", 4).store()
 
-        #adding a b-key pair to a bucket input
+        # adding a b-key pair to a bucket input
         with self.assertRaises(ValueError):
             mr = self.client.add(self.bucket_name)
             mr.add(self.bucket_name, 'bar')
 
-        #adding a b-key pair to a query input
+        # adding a b-key pair to a query input
         with self.assertRaises(ValueError):
             mr = self.client.search(self.bucket_name, 'fleh')
             mr.add(self.bucket_name, 'bar')
 
-        #adding a key filter to a query input
+        # adding a key filter to a query input
         with self.assertRaises(ValueError):
             mr = self.client.search(self.bucket_name, 'fleh')
             mr.add_key_filter("tokenize", "-", 1)
 
 
 class JSMapReduceTests(object):
+
     def test_javascript_source_map(self):
         # Create the object...
         bucket = self.client.bucket(self.bucket_name)
@@ -133,11 +138,11 @@ class JSMapReduceTests(object):
         self.assertEqual(result, [2])
 
         # test ASCII-encodable unicode is accepted
-        mr.map(u"function (v) { return [JSON.parse(v.values[0].data)]; }")
+        mr.map("function (v) { return [JSON.parse(v.values[0].data)]; }")
 
         # test non-ASCII-encodable unicode is rejected
         self.assertRaises(TypeError, mr.map,
-                          u"""
+                          """
                           function (v) {
                           /* æ */
                             return [JSON.parse(v.values[0].data)];
@@ -283,9 +288,9 @@ class JSMapReduceTests(object):
         results = mr.map_values().run()
         results.sort()
         self.assertEqual(results,
-                         [u'"bazval2"',
-                          u'"bazval3"',
-                          u'"bazval4"'])
+                         ['"bazval2"',
+                          '"bazval3"',
+                          '"bazval4"'])
 
     def test_mr_list_add_two_buckets(self):
         bucket = self.client.bucket(self.bucket_name)
@@ -306,10 +311,10 @@ class JSMapReduceTests(object):
         results.sort()
 
         self.assertEqual(results,
-                         [u'"barval5"',
-                          u'"barval6"',
-                          u'"fooval2"',
-                          u'"fooval3"'])
+                         ['"barval5"',
+                          '"barval6"',
+                          '"fooval2"',
+                          '"fooval3"'])
 
     def test_mr_list_add_mix(self):
         bucket = self.client.bucket("bucket_a")
@@ -329,13 +334,14 @@ class JSMapReduceTests(object):
         results.sort()
 
         self.assertEqual(results,
-                         [u'"barval2"',
-                          u'"barval9"',
-                          u'"fooval2"',
-                          u'"fooval3"'])
+                         ['"barval2"',
+                          '"barval9"',
+                          '"fooval2"',
+                          '"fooval3"'])
 
 
 class MapReduceAliasTests(object):
+
     """This tests the map reduce aliases"""
 
     def test_map_values(self):
@@ -525,6 +531,7 @@ class MapReduceAliasTests(object):
 
 
 class MapReduceStreamTests(object):
+
     def test_stream_results(self):
         bucket = self.client.bucket(self.bucket_name)
         bucket.new('one', data=1).store()

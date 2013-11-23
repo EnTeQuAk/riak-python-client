@@ -30,6 +30,7 @@ versions = {
 
 
 class FeatureDetection(object):
+
     """
     Implements boolean methods that can be checked for the presence of
     specific server-side features. Subclasses must implement the

@@ -19,6 +19,9 @@ specific language governing permissions and limitations
 under the License.
 """
 
+from __future__ import absolute_import
+
+
 import errno
 import socket
 from riak.transports.pool import Pool
@@ -26,9 +29,11 @@ from riak.transports.pbc.transport import RiakPbcTransport
 
 
 class RiakPbcPool(Pool):
+
     """
     A resource pool of PBC transports.
     """
+
     def __init__(self, client, **options):
         super(RiakPbcPool, self).__init__()
         self._client = client

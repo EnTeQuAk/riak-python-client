@@ -17,8 +17,13 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 """
+
+from __future__ import absolute_import
+
+
 import mimetypes
 from riak.util import deprecateQuorumAccessors, deprecated
+import collections
 
 
 def deprecateBucketQuorumAccessors(klass):
@@ -37,6 +42,7 @@ def bucket_property(name, doc=None):
 
 @deprecateBucketQuorumAccessors
 class RiakBucket(object):
+
     """
     The ``RiakBucket`` object allows you to access and change information
     about a Riak bucket, and provides methods to create or retrieve
@@ -53,7 +59,7 @@ class RiakBucket(object):
         :type name: string
         """
         try:
-            if isinstance(name, basestring):
+            if isinstance(name, str):
                 name = name.encode('ascii')
             else:
                 raise TypeError('Bucket name must be a string')
@@ -153,7 +159,7 @@ class RiakBucket(object):
         :rtype: :class:`RiakObject <riak.riak_object.RiakObject>`
         """
         try:
-            if isinstance(data, basestring):
+            if isinstance(data, str):
                 data = data.encode('ascii')
         except UnicodeError:
             raise TypeError('Unicode data values are not supported.')
@@ -244,7 +250,7 @@ class RiakBucket(object):
         return self._client.multiget(bkeys, r=r, pr=pr)
 
     def _get_resolver(self):
-        if callable(self._resolver):
+        if isinstance(self._resolver, collections.Callable):
             return self._resolver
         elif self._resolver is None:
             return self._client.resolver
@@ -252,7 +258,7 @@ class RiakBucket(object):
             raise TypeError("resolver is not a function")
 
     def _set_resolver(self, value):
-        if value is None or callable(value):
+        if value is None or isinstance(value, collections.Callable):
             self._resolver = value
         else:
             raise TypeError("resolver is not a function")
@@ -518,4 +524,4 @@ class RiakBucket(object):
     def __str__(self):
         return '<RiakBucket "{0}">'.format(self.name)
 
-from riak_object import RiakObject
+from riak.riak_object import RiakObject

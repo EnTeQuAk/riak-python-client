@@ -18,34 +18,41 @@ specific language governing permissions and limitations
 under the License.
 """
 
-import httplib
+from __future__ import absolute_import
+
+
+import http.client
 import socket
 from riak.transports.pool import Pool
 from riak.transports.http.transport import RiakHttpTransport
 
 
-class NoNagleHTTPConnection(httplib.HTTPConnection):
+class NoNagleHTTPConnection(http.client.HTTPConnection):
+
     """
     Setup a connection class which does not use Nagle - deal with
     latency on PUT requests lower than MTU
     """
+
     def connect(self):
         """
         Set TCP_NODELAY on socket
         """
-        httplib.HTTPConnection.connect(self)
+        http.client.HTTPConnection.connect(self)
         self.sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
 
 
 class RiakHttpPool(Pool):
+
     """
     A pool of HTTP(S) transport connections.
     """
+
     def __init__(self, client, **options):
         self.client = client
         self.options = options
         if client.protocol == 'https':
-            self.connection_class = httplib.HTTPSConnection
+            self.connection_class = http.client.HTTPSConnection
         else:
             self.connection_class = NoNagleHTTPConnection
         super(RiakHttpPool, self).__init__()
@@ -62,10 +69,10 @@ class RiakHttpPool(Pool):
 
 
 CONN_CLOSED_ERRORS = (
-    httplib.NotConnected,
-    httplib.IncompleteRead,
-    httplib.ImproperConnectionState,
-    httplib.BadStatusLine
+    http.client.NotConnected,
+    http.client.IncompleteRead,
+    http.client.ImproperConnectionState,
+    http.client.BadStatusLine
 )
 
 

@@ -19,13 +19,16 @@ specific language governing permissions and limitations
 under the License.
 """
 
+from __future__ import absolute_import
+
+
 try:
     import simplejson as json
 except ImportError:
     import json
 
 
-import httplib
+import http.client
 from xml.dom.minidom import Document
 from riak.transports.transport import RiakTransport
 from riak.transports.http.resources import RiakHttpResources
@@ -42,6 +45,7 @@ from riak.util import decode_index_value
 
 class RiakHttpTransport(RiakHttpConnection, RiakHttpResources, RiakHttpCodec,
                         RiakTransport):
+
     """
     The RiakHttpTransport object holds information necessary to
     connect to Riak via HTTP.
@@ -49,7 +53,7 @@ class RiakHttpTransport(RiakHttpConnection, RiakHttpResources, RiakHttpCodec,
 
     def __init__(self, node=None,
                  client=None,
-                 connection_class=httplib.HTTPConnection,
+                 connection_class=http.client.HTTPConnection,
                  client_id=None,
                  **unused_options):
         """
@@ -312,16 +316,16 @@ class RiakHttpTransport(RiakHttpConnection, RiakHttpResources, RiakHttpCodec,
         status, headers, body = self._request('GET', url)
         self.check_http_code(status, [200])
         json_data = json.loads(body)
-        if return_terms and u'results' in json_data:
+        if return_terms and 'results' in json_data:
             results = []
-            for result in json_data[u'results'][:]:
-                term, key = result.items()[0]
+            for result in json_data['results'][:]:
+                term, key = list(result.items())[0]
                 results.append((decode_index_value(index, term), key),)
         else:
-            results = json_data[u'keys'][:]
+            results = json_data['keys'][:]
 
-        if max_results and u'continuation' in json_data:
-            return (results, json_data[u'continuation'])
+        if max_results and 'continuation' in json_data:
+            return (results, json_data['continuation'])
         else:
             return (results, None)
 
@@ -430,7 +434,7 @@ class RiakHttpTransport(RiakHttpConnection, RiakHttpResources, RiakHttpCodec,
 
         self.check_http_code(status, [200, 404])
         if status == 200:
-            return long(body.strip())
+            return int(body.strip())
         elif status == 404:
             return None
 
@@ -444,7 +448,7 @@ class RiakHttpTransport(RiakHttpConnection, RiakHttpResources, RiakHttpCodec,
         status, headers, body = self._request('POST', url, headers,
                                               str(amount))
         if return_value and status == 200:
-            return long(body.strip())
+            return int(body.strip())
         elif status == 204:
             return True
         else:

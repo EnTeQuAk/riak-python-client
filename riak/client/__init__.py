@@ -1,3 +1,4 @@
+#-*- coding: utf-8 -*-
 """
 Copyright 2011 Basho Technologies, Inc.
 Copyright 2010 Rusty Klophaus <rusty@basho.com>
@@ -19,6 +20,9 @@ specific language governing permissions and limitations
 under the License.
 """
 
+from __future__ import absolute_import
+
+
 try:
     import simplejson as json
 except ImportError:
@@ -33,7 +37,7 @@ from riak.mapreduce import RiakMapReduceChain
 from riak.resolver import default_resolver
 from riak.search import RiakSearch
 from riak.transports.http import RiakHttpPool
-from riak.transports.pbc import RiakPbcPool
+#from riak.transports.pbc import RiakPbcPool
 from riak.util import deprecated
 from riak.util import deprecateQuorumAccessors
 from riak.util import lazy_property
@@ -42,13 +46,14 @@ from riak.util import lazy_property
 def default_encoder(obj):
     """
     Default encoder for JSON datatypes, which returns UTF-8 encoded
-    json instead of the default bloated \uXXXX escaped ASCII strings.
+    json instead of the default bloated \\uXXXX escaped ASCII strings.
     """
     return json.dumps(obj, ensure_ascii=False).encode("utf-8")
 
 
 @deprecateQuorumAccessors
 class RiakClient(RiakMapReduceChain, RiakClientOperations):
+
     """
     The ``RiakClient`` object holds information necessary to connect
     to Riak. Requests can be made to Riak directly through the client
@@ -99,7 +104,7 @@ class RiakClient(RiakMapReduceChain, RiakClientOperations):
         self.protocol = protocol or 'http'
         self.resolver = default_resolver
         self._http_pool = RiakHttpPool(self, **transport_options)
-        self._pb_pool = RiakPbcPool(self, **transport_options)
+        #self._pb_pool = RiakPbcPool(self, **transport_options)
 
         self._encoders = {'application/json': default_encoder,
                           'text/json': default_encoder,
@@ -182,8 +187,8 @@ class RiakClient(RiakMapReduceChain, RiakClientOperations):
     def _set_client_id(self, client_id):
         for http in self._http_pool:
             http.client_id = client_id
-        for pb in self._pb_pool:
-            pb.client_id = client_id
+        # for pb in self._pb_pool:
+        #    pb.client_id = client_id
 
     client_id = property(_get_client_id, _set_client_id,
                          doc="""The client ID for this client instance""")
@@ -239,7 +244,7 @@ class RiakClient(RiakMapReduceChain, RiakClientOperations):
 
         :rtype: :class:`RiakBucket <riak.bucket.RiakBucket>`
         """
-        if not isinstance(name, basestring):
+        if not isinstance(name, str):
             raise TypeError('Bucket name must be a string')
 
         if name in self._buckets:

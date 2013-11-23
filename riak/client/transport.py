@@ -15,14 +15,19 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 """
+
+from __future__ import absolute_import
+
+
 from contextlib import contextmanager
 from riak.transports.pool import BadResource
-from riak.transports.pbc import is_retryable as is_pbc_retryable
+#from riak.transports.pbc import is_retryable as is_pbc_retryable
 from riak.transports.http import is_retryable as is_http_retryable
-import httplib
+import http.client
 
 
 class RiakClientTransport(object):
+
     """
     Methods for RiakClient related to transport selection and retries.
     """
@@ -67,7 +72,7 @@ class RiakClientTransport(object):
                 with pool.take(_filter=_skip_bad_nodes) as transport:
                     try:
                         return fn(transport)
-                    except (IOError, httplib.HTTPException) as e:
+                    except (IOError, http.client.HTTPException) as e:
                         if _is_retryable(e):
                             transport._node.error_rate.incr(1)
                             skip_nodes.append(transport._node)
@@ -110,7 +115,8 @@ def _is_retryable(error):
     :type error: Exception
     :rtype: boolean
     """
-    return is_pbc_retryable(error) or is_http_retryable(error)
+    # return is_pbc_retryable(error) or is_http_retryable(error)
+    return is_http_retryable(error)
 
 
 def retryable(fn, protocol=None):
@@ -118,6 +124,7 @@ def retryable(fn, protocol=None):
     Wraps a client operation that can be retried according to the set
     RETRY_COUNT. Used internally.
     """
+
     def wrapper(self, *args, **kwargs):
         pool = self._choose_pool(protocol)
 

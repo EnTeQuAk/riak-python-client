@@ -15,16 +15,22 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 """
+
+from __future__ import absolute_import
+
+
 from riak import RiakError
 from riak.util import deprecated
 
 
 class RiakContent(object):
+
     """
     The RiakContent holds the metadata and value of a single sibling
     within a RiakObject. RiakObjects that have more than one sibling
     are considered to be in conflict.
     """
+
     def __init__(self, robject, data=None, encoded_data=None, charset=None,
                  content_type='application/json', content_encoding=None,
                  last_modified=None, etag=None, usermeta=None, links=None,
@@ -92,7 +98,7 @@ class RiakContent(object):
         encoder = self._robject.bucket.get_encoder(self.content_type)
         if encoder:
             return encoder(value)
-        elif isinstance(value, basestring):
+        elif isinstance(value, str):
             return value.encode()
         else:
             raise TypeError('No encoder for non-string data '

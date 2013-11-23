@@ -16,10 +16,19 @@ specific language governing permissions and limitations
 under the License.
 """
 
+from __future__ import print_function
+
+from __future__ import absolute_import
+
 from collections import namedtuple
-from Queue import Queue
 from threading import Thread, Lock, Event
 from multiprocessing import cpu_count
+
+try:
+    from Queue import Queue
+except ImportError:
+    from queue import Queue
+
 
 __all__ = ['multiget']
 
@@ -38,6 +47,7 @@ Task = namedtuple('Task', ['client', 'outq', 'bucket', 'key', 'options'])
 
 
 class MultiGetPool(object):
+
     """
     Encapsulates a pool of fetcher threads. These threads can be used
     across many multi-get requests.
@@ -131,7 +141,7 @@ class MultiGetPool(object):
                 task.outq.put(obj)
             except KeyboardInterrupt:
                 raise
-            except StandardError as err:
+            except Exception as err:
                 task.outq.put((task.bucket, task.key, err), )
             finally:
                 self._inq.task_done()
@@ -186,15 +196,15 @@ if __name__ == '__main__':
     from riak import RiakClient
     import riak.benchmark as benchmark
     client = RiakClient(protocol='pbc')
-    bkeys = [('multiget', str(key)) for key in xrange(10000)]
+    bkeys = [('multiget', str(key)) for key in range(10000)]
 
     data = open(__file__).read()
 
-    print "Benchmarking multiget:"
-    print "      CPUs: {0}".format(cpu_count())
-    print "   Threads: {0}".format(POOL_SIZE)
-    print "      Keys: {0}".format(len(bkeys))
-    print
+    print("Benchmarking multiget:")
+    print("      CPUs: {0}".format(cpu_count()))
+    print("   Threads: {0}".format(POOL_SIZE))
+    print("      Keys: {0}".format(len(bkeys)))
+    print()
 
     with benchmark.measure() as b:
         with b.report('populate'):

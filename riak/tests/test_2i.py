@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+
+
+from __future__ import absolute_import
 import os
 import platform
 if platform.python_version() < '2.7':
@@ -12,6 +15,7 @@ SKIP_INDEXES = int(os.environ.get('SKIP_INDEXES', '0'))
 
 
 class TwoITests(object):
+
     def is_2i_supported(self):
         # Immediate test to see if 2i is even supported w/ the backend
         try:
@@ -190,25 +194,25 @@ class TwoITests(object):
 
         # Test an equality query...
         results = bucket.get_index('field1_bin', 'val2')
-        self.assertEquals(1, len(results))
-        self.assertEquals(o2.key, str(results[0]))
+        self.assertEqual(1, len(results))
+        self.assertEqual(o2.key, str(results[0]))
 
         # Test a range query...
         results = bucket.get_index('field1_bin', 'val2', 'val4')
         vals = set([str(key) for key in results])
-        self.assertEquals(3, len(results))
-        self.assertEquals(set([o2.key, o3.key, o4.key]), vals)
+        self.assertEqual(3, len(results))
+        self.assertEqual(set([o2.key, o3.key, o4.key]), vals)
 
         # Test an equality query...
         results = bucket.get_index('field2_int', 1002)
-        self.assertEquals(1, len(results))
-        self.assertEquals(o2.key, str(results[0]))
+        self.assertEqual(1, len(results))
+        self.assertEqual(o2.key, str(results[0]))
 
         # Test a range query...
         results = bucket.get_index('field2_int', 1002, 1004)
         vals = set([str(key) for key in results])
-        self.assertEquals(3, len(results))
-        self.assertEquals(set([o2.key, o3.key, o4.key]), vals)
+        self.assertEqual(3, len(results))
+        self.assertEqual(set([o2.key, o3.key, o4.key]), vals)
 
     @unittest.skipIf(SKIP_INDEXES, 'SKIP_INDEXES is defined')
     def test_secondary_index_invalid_name(self):

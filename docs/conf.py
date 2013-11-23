@@ -11,7 +11,10 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-import sys, os
+
+from __future__ import absolute_import
+import sys
+import os
 import sphinx_bootstrap_theme
 from version import get_version
 
@@ -20,7 +23,7 @@ from version import get_version
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 sys.path.insert(0, os.path.abspath('..'))
 
-# -- General configuration -----------------------------------------------------
+# -- General configuration -----------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
 #needs_sphinx = '1.0'
@@ -42,8 +45,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Riak Python Client'
-copyright = u'2010-2013, Basho Technologies'
+project = 'Riak Python Client'
+copyright = '2010-2013, Basho Technologies'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -90,7 +93,7 @@ pygments_style = 'tango'
 #modindex_common_prefix = []
 
 
-# -- Options for HTML output ---------------------------------------------------
+# -- Options for HTML output ---------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
@@ -102,9 +105,9 @@ html_theme = 'bootstrap'
 # documentation.
 html_theme_options = {
     'bootswatch_theme': 'cerulean',
-    'navbar_site_name':"Docs",
+    'navbar_site_name': "Docs",
     'globaltoc_depth': 2,
-    'source_link_position':'footer'
+    'source_link_position': 'footer'
 }
 
 # Add any paths that contain custom themes here, relative to this directory.
@@ -176,7 +179,7 @@ html_static_path = ['_static']
 htmlhelp_basename = 'RiakPythonbindingdoc'
 
 
-# -- Options for LaTeX output --------------------------------------------------
+# -- Options for LaTeX output --------------------------------------------
 
 # The paper size ('letter' or 'a4').
 #latex_paper_size = 'letter'
@@ -215,7 +218,7 @@ htmlhelp_basename = 'RiakPythonbindingdoc'
 #latex_domain_indices = True
 
 
-# -- Options for manual page output --------------------------------------------
+# -- Options for manual page output --------------------------------------
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
@@ -225,7 +228,7 @@ htmlhelp_basename = 'RiakPythonbindingdoc'
 # ]
 
 
-# -- Options for Epub output ---------------------------------------------------
+# -- Options for Epub output ---------------------------------------------
 
 # Bibliographic Dublin Core info.
 # epub_title = u'Riak (Python binding)'

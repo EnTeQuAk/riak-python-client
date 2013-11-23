@@ -18,6 +18,7 @@ under the License.
 
 
 class RiakSearch(object):
+
     """
     A wrapper around Riak Search-related client operations. See
     :func:`RiakClient.solr`.

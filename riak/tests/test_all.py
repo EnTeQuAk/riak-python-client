@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-from __future__ import with_statement
 
+
+from __future__ import absolute_import
 import os
 import random
 import platform
@@ -124,6 +125,7 @@ class BaseTestCase(object):
 
 
 class ClientTests(object):
+
     def test_request_retries(self):
         # We guess at some ports that will be unused by Riak or
         # anything else.
@@ -204,7 +206,7 @@ class ClientTests(object):
             self.assertIsInstance(failure, tuple)
             self.assertEqual(failure[0], self.bucket_name)
             self.assertIn(failure[1], keys)
-            self.assertIsInstance(failure[2], StandardError)
+            self.assertIsInstance(failure[2], Exception)
 
     def test_multiget_notfounds(self):
         """
@@ -299,6 +301,7 @@ class RiakHttpTransportTestCase(BasicKVTests,
 
 
 class FilterTests(unittest.TestCase):
+
     def test_simple(self):
         f1 = RiakKeyFilter("tokenize", "-", 1)
         self.assertEqual(f1._filters, [["tokenize", "-", 1]])

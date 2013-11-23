@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
+
+
+from __future__ import absolute_import
 import os
-import cPickle
+import pickle
 import copy
 import platform
 from time import sleep
@@ -28,20 +31,21 @@ class NotJsonSerializable(object):
             return False
         if len(self.kwargs) != len(other.kwargs):
             return False
-        for name, value in self.kwargs.items():
+        for name, value in list(self.kwargs.items()):
             if other.kwargs[name] != value:
                 return False
         value1_args = copy.copy(self.args)
         value2_args = copy.copy(other.args)
         value1_args.sort()
         value2_args.sort()
-        for i in xrange(len(value1_args)):
+        for i in range(len(value1_args)):
             if value1_args[i] != value2_args[i]:
                 return False
         return True
 
 
 class BasicKVTests(object):
+
     def test_is_alive(self):
         self.assertTrue(self.client.is_alive())
 
@@ -58,18 +62,18 @@ class BasicKVTests(object):
 
         # unicode objects are fine, as long as they don't
         # contain any non-ASCII chars
-        self.client.bucket(unicode(self.bucket_name))
-        self.assertRaises(TypeError, self.client.bucket, u'búcket')
+        self.client.bucket(str(self.bucket_name))
+        self.assertRaises(TypeError, self.client.bucket, 'búcket')
         self.assertRaises(TypeError, self.client.bucket, 'búcket')
 
-        bucket.get(u'foo')
-        self.assertRaises(TypeError, bucket.get, u'føø')
+        bucket.get('foo')
+        self.assertRaises(TypeError, bucket.get, 'føø')
         self.assertRaises(TypeError, bucket.get, 'føø')
 
-        self.assertRaises(TypeError, bucket.new, u'foo', 'éå')
-        self.assertRaises(TypeError, bucket.new, u'foo', 'éå')
-        self.assertRaises(TypeError, bucket.new, 'foo', u'éå')
-        self.assertRaises(TypeError, bucket.new, 'foo', u'éå')
+        self.assertRaises(TypeError, bucket.new, 'foo', 'éå')
+        self.assertRaises(TypeError, bucket.new, 'foo', 'éå')
+        self.assertRaises(TypeError, bucket.new, 'foo', 'éå')
+        self.assertRaises(TypeError, bucket.new, 'foo', 'éå')
 
         obj2 = bucket.new('baz', rand, 'application/json')
         obj2.charset = 'UTF-8'
@@ -79,7 +83,7 @@ class BasicKVTests(object):
 
     def test_store_obj_with_unicode(self):
         bucket = self.client.bucket(self.bucket_name)
-        data = {u'føø': u'éå'}
+        data = {'føø': 'éå'}
         obj = bucket.new('foo', data)
         obj.store()
         obj = bucket.get('foo')
@@ -87,7 +91,7 @@ class BasicKVTests(object):
 
     def test_store_unicode_string(self):
         bucket = self.client.bucket(self.bucket_name)
-        data = u"some unicode data: \u00c6"
+        data = "some unicode data: \u00c6"
         obj = bucket.new(self.key_name, encoded_data=data.encode('utf-8'),
                          content_type='text/plain')
         obj.charset = 'utf-8'
@@ -109,7 +113,7 @@ class BasicKVTests(object):
         # release.
         with self.assertRaisesRegexp(TypeError,
                                      'Unicode bucket names are not supported'):
-            self.client.bucket(u'føø')
+            self.client.bucket('føø')
 
         # This is fine, since it's already ASCII
         self.client.bucket('ASCII')
@@ -135,7 +139,7 @@ class BasicKVTests(object):
         for keylist in bucket.stream_keys():
             self.assertNotEqual([], keylist)
             for key in keylist:
-                self.assertIsInstance(key, basestring)
+                self.assertIsInstance(key, str)
             streamed_keys += keylist
         self.assertEqual(sorted(regular_keys), sorted(streamed_keys))
 
@@ -197,8 +201,8 @@ class BasicKVTests(object):
     def test_custom_bucket_encoder_decoder(self):
         bucket = self.client.bucket(self.bucket_name)
         # Teach the bucket how to pickle
-        bucket.set_encoder('application/x-pickle', cPickle.dumps)
-        bucket.set_decoder('application/x-pickle', cPickle.loads)
+        bucket.set_encoder('application/x-pickle', pickle.dumps)
+        bucket.set_decoder('application/x-pickle', pickle.loads)
         data = {'array': [1, 2, 3], 'badforjson': NotJsonSerializable(1, 3)}
         obj = bucket.new(self.key_name, data, 'application/x-pickle')
         obj.store()
@@ -208,8 +212,8 @@ class BasicKVTests(object):
     def test_custom_client_encoder_decoder(self):
         bucket = self.client.bucket(self.bucket_name)
         # Teach the client how to pickle
-        self.client.set_encoder('application/x-pickle', cPickle.dumps)
-        self.client.set_decoder('application/x-pickle', cPickle.loads)
+        self.client.set_encoder('application/x-pickle', pickle.dumps)
+        self.client.set_decoder('application/x-pickle', pickle.loads)
         data = {'array': [1, 2, 3], 'badforjson': NotJsonSerializable(1, 3)}
         obj = bucket.new(self.key_name, data, 'application/x-pickle')
         obj.store()
@@ -486,6 +490,7 @@ class BasicKVTests(object):
 
 
 class BucketPropsTest(object):
+
     def test_rw_settings(self):
         bucket = self.client.bucket(self.props_bucket)
         self.assertEqual(bucket.r, "quorum")
@@ -539,6 +544,7 @@ class BucketPropsTest(object):
 
 
 class KVFileTests(object):
+
     def test_store_binary_object_from_file(self):
         bucket = self.client.bucket(self.bucket_name)
         filepath = os.path.join(os.path.dirname(__file__), 'test_all.py')
@@ -567,6 +573,7 @@ class KVFileTests(object):
 
 
 class CounterTests(object):
+
     def test_counter_requires_allow_mult(self):
         bucket = self.client.bucket(self.bucket_name)
         self.assertFalse(bucket.allow_mult)

@@ -16,8 +16,11 @@ specific language governing permissions and limitations
 under the License.
 """
 
+from __future__ import absolute_import
+
+
 import platform
-from Queue import Queue
+from queue import Queue
 from threading import Thread, currentThread
 from riak.transports.pool import Pool, BadResource
 from random import SystemRandom
@@ -31,6 +34,7 @@ import os
 
 
 class SimplePool(Pool):
+
     def __init__(self):
         self.count = 0
         Pool.__init__(self)
@@ -44,6 +48,7 @@ class SimplePool(Pool):
 
 
 class EmptyListPool(Pool):
+
     def create_resource(self):
         return []
 
@@ -51,6 +56,7 @@ class EmptyListPool(Pool):
 @unittest.skipIf(os.environ.get('SKIP_POOL'),
                  'Skipping connection pool tests')
 class PoolTest(unittest.TestCase):
+
     def test_yields_new_object_when_empty(self):
         """
         The pool should create new resources as needed.
@@ -234,7 +240,7 @@ class PoolTest(unittest.TestCase):
             for thr in threads:
                 thr.join()
 
-            self.assertItemsEqual(pool.elements, touched)
+            self.assertEqual(len(pool.elements), len(touched))
 
     def test_clear(self):
         """

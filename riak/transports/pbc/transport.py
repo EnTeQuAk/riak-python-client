@@ -19,17 +19,21 @@ specific language governing permissions and limitations
 under the License.
 """
 
+from __future__ import absolute_import
+
+
 import riak_pb
 from riak import RiakError
 from riak.transports.transport import RiakTransport
 from riak.riak_object import VClock
 from riak.util import decode_index_value
-from connection import RiakPbcConnection
-from stream import (RiakPbcKeyStream, RiakPbcMapredStream, RiakPbcBucketStream,
-                    RiakPbcIndexStream)
-from codec import RiakPbcCodec
+from riak.transports.pbc.connection import RiakPbcConnection
+from riak.transports.pbc.stream import (
+    RiakPbcKeyStream, RiakPbcMapredStream, RiakPbcBucketStream,
+    RiakPbcIndexStream)
+from riak.transports.pbc.codec import RiakPbcCodec
 
-from messages import (
+from riak.transports.messages import (
     MSG_CODE_PING_REQ,
     MSG_CODE_PING_RESP,
     MSG_CODE_GET_CLIENT_ID_REQ,
@@ -74,6 +78,7 @@ from messages import (
 
 
 class RiakPbcTransport(RiakTransport, RiakPbcConnection, RiakPbcCodec):
+
     """
     The RiakPbcTransport object holds a connection to the protocol
     buffers interface on the riak server.
@@ -533,8 +538,8 @@ class RiakPbcTransport(RiakTransport, RiakPbcConnection, RiakPbcCodec):
         for doc in resp.docs:
             resultdoc = {}
             for pair in doc.fields:
-                ukey = unicode(pair.key, 'utf-8')
-                uval = unicode(pair.value, 'utf-8')
+                ukey = str(pair.key, 'utf-8')
+                uval = str(pair.value, 'utf-8')
                 resultdoc[ukey] = uval
             docs.append(resultdoc)
         result['docs'] = docs

@@ -1,0 +1,3 @@
+- check for port to urllib3 (and gain all it's features for free)
+- protobufs :-/ make it optional for py3k in the meantime?
+- py2 + py3 in the same codebase (got converted to python3 for now in a naive "needs to work" approach)

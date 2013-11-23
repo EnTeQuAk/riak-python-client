@@ -17,16 +17,20 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 """
+
+from __future__ import absolute_import
+
 import base64
 import random
 import threading
 import platform
 import os
 import json
-from feature_detect import FeatureDetection
+from riak.transports.feature_detect import FeatureDetection
 
 
 class RiakTransport(FeatureDetection):
+
     """
     Class to encapsulate transport details and methods. All protocol
     transports are subclasses of this class.
@@ -47,7 +51,7 @@ class RiakTransport(FeatureDetection):
         Returns a random client identifier
         """
         return ('py_%s' %
-                base64.b64encode(str(random.randint(1, 0x40000000))))
+                base64.b64encode(bytes(random.randint(1, 0x40000000))))
 
     @classmethod
     def make_fixed_client_id(self):
@@ -257,9 +261,9 @@ class RiakTransport(FeatureDetection):
                   'max_score': 0.0,
                   'docs': []}
         for bucket, key, data in mr_result:
-            if u'score' in data and data[u'score'][0] > result['max_score']:
-                result['max_score'] = data[u'score'][0]
-            result['docs'].append({u'id': key})
+            if 'score' in data and data['score'][0] > result['max_score']:
+                result['max_score'] = data['score'][0]
+            result['docs'].append({'id': key})
         return result
 
     def _get_index_mapred_emu(self, bucket, index, startkey, endkey=None):
