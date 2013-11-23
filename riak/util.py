@@ -159,4 +159,4 @@ def decode_index_value(index, value):
     if "_int" in index:
         return int(value)
     else:
-        return str(value)
+        return bytes(value)
